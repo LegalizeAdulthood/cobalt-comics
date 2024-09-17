@@ -1,5 +1,7 @@
 #include <comics/coro.h>
 
+#include "ends_with.h"
+
 #include <coroutine>
 #include <map>
 #include <stdexcept>
@@ -56,11 +58,6 @@ static std::string_view to_string(CreditField field)
         return "letters";
     }
     return "?";
-}
-
-inline bool endsWith(const std::string &text, const std::string &suffix)
-{
-    return text.length() >= suffix.length() && text.substr(text.length() - suffix.length()) == suffix;
 }
 
 class JSONDatabase : public Database

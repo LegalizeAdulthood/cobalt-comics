@@ -9,9 +9,8 @@ project("${COBALT_COMICS_PROJECT_NAME}" CXX)
 
 include(CTest)
 
-add_executable(query-comics main.cpp)
-
 add_subdirectory(comics)
+add_subdirectory(tools)
 
 if(BUILD_TESTING)
     add_subdirectory(tests)

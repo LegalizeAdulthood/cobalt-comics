@@ -7,14 +7,10 @@
 #include <simdjson.h>
 
 #include "comics/comics.h"
+#include "ends_with.h"
 
 namespace comics
 {
-
-inline bool endsWith(const std::string &text, const std::string &suffix)
-{
-    return text.length() >= suffix.length() && text.substr(text.length() - suffix.length()) == suffix;
-}
 
 namespace
 {
@@ -63,10 +59,10 @@ void printSequence(std::ostream &str, const simdjson::dom::object &sequence)
     printField("colors");
 }
 
-class JSONDatabase : public Database
+class JSONQuery : public Query
 {
 public:
-    JSONDatabase(const std::filesystem::path &jsonDir);
+    JSONQuery(const std::filesystem::path &jsonDir);
     void printScriptSequences(std::ostream &str, const std::string &name) override;
     void printPencilSequences(std::ostream &str, const std::string &name) override;
     void printInkSequences(std::ostream &str, const std::string &name) override;
@@ -82,7 +78,7 @@ private:
     simdjson::simdjson_result<simdjson::dom::element> m_sequences;
 };
 
-JSONDatabase::JSONDatabase(const std::filesystem::path &jsonDir)
+JSONQuery::JSONQuery(const std::filesystem::path &jsonDir)
 {
     bool foundIssues{false};
     bool foundSequences{false};
@@ -131,27 +127,27 @@ JSONDatabase::JSONDatabase(const std::filesystem::path &jsonDir)
     }
 }
 
-void JSONDatabase::printScriptSequences(std::ostream &str, const std::string &name)
+void JSONQuery::printScriptSequences(std::ostream &str, const std::string &name)
 {
     printMatchingSequences(str, "script", name);
 }
 
-void JSONDatabase::printPencilSequences(std::ostream &str, const std::string &name)
+void JSONQuery::printPencilSequences(std::ostream &str, const std::string &name)
 {
     printMatchingSequences(str, "pencils", name);
 }
 
-void JSONDatabase::printInkSequences(std::ostream &str, const std::string &name)
+void JSONQuery::printInkSequences(std::ostream &str, const std::string &name)
 {
     printMatchingSequences(str, "inks", name);
 }
 
-void JSONDatabase::printColorSequences(std::ostream &str, const std::string &name)
+void JSONQuery::printColorSequences(std::ostream &str, const std::string &name)
 {
     printMatchingSequences(str, "colors", name);
 }
 
-void JSONDatabase::printIssue(std::ostream &str, int id) const
+void JSONQuery::printIssue(std::ostream &str, int id) const
 {
     const auto it = std::find_if(m_issues.get_array().begin(), m_issues.get_array().end(),
         [=](const simdjson::dom::element &item)
@@ -178,7 +174,7 @@ void JSONDatabase::printIssue(std::ostream &str, int id) const
     str << issue.at_key("series name").get_string().value() << " #" << issue.at_key("issue number").get_string().value() << '\n';
 }
 
-void JSONDatabase::printMatchingSequences(std::ostream &str, const std::string_view &fieldName, const std::string &name)
+void JSONQuery::printMatchingSequences(std::ostream &str, const std::string_view &fieldName, const std::string &name)
 {
     std::map<int, std::vector<simdjson::dom::object>> issueSequences;
 
@@ -240,9 +236,9 @@ void JSONDatabase::printMatchingSequences(std::ostream &str, const std::string_v
 
 } // namespace
 
-std::shared_ptr<Database> createDatabase(const std::filesystem::path &jsonDir)
+std::shared_ptr<Query> createQuery(const std::filesystem::path &jsonDir)
 {
-    return std::make_shared<JSONDatabase>(jsonDir);
+    return std::make_shared<JSONQuery>(jsonDir);
 }
 
 } // namespace comics

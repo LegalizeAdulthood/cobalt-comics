@@ -7,10 +7,10 @@
 namespace comics
 {
 
-class Database
+class Query
 {
 public:
-    virtual ~Database() = default;
+    virtual ~Query() = default;
 
     virtual void printScriptSequences(std::ostream &str, const std::string &name) = 0;
     virtual void printPencilSequences(std::ostream &str, const std::string &name) = 0;
@@ -18,6 +18,6 @@ public:
     virtual void printColorSequences(std::ostream &str, const std::string &name) = 0;
 };
 
-std::shared_ptr<Database> createDatabase(const std::filesystem::path &jsonDir);
+std::shared_ptr<Query> createQuery(const std::filesystem::path &jsonDir);
 
 } // namespace comics

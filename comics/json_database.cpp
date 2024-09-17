@@ -85,4 +85,31 @@ DatabasePtr createDatabase(const std::filesystem::path &jsonDir)
     return std::make_shared<JSONDatabase>(jsonDir);
 }
 
+simdjson::dom::object find_issue(DatabasePtr db, int issue)
+{
+    simdjson::dom::array issues = db->getIssues().get_array();
+    const auto it = std::find_if(issues.begin(), issues.end(),
+        [=](const simdjson::dom::element &item)
+        {
+            if (!item.is_object())
+            {
+                throw std::runtime_error("Issue array element is not an object");
+            }
+            const simdjson::dom::object &obj = item.get_object().value();
+            if (!obj.at_key("id").is_string())
+            {
+                std::ostringstream typeName;
+                typeName << obj.at_key("id").type();
+                throw std::runtime_error("Expected string value for key 'id', got " + typeName.str());
+            }
+            const int issueId = std::stoi(std::string{obj.at_key("id").get_string().value()});
+            return issueId == issue;
+        });
+    if (it == issues.end())
+    {
+        throw std::runtime_error("Couldn't find issue with id " + std::to_string(issue));
+    }
+    return (*it).get_object().value();
+}
+
 } // namespace comics

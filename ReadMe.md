@@ -1,3 +1,3 @@
-[![CMake workflow](https://github.com/LegalizeAdulthood/utahcpp-project-template/actions/workflows/cmake.yml/badge.svg)](https://github.com/LegalizeAdulthood/utahcpp-project-template/actions/workflows/cmake.yml)
+[![CMake workflow](https://github.com/LegalizeAdulthood/cobalt-comics/actions/workflows/cmake.yml/badge.svg)](https://github.com/LegalizeAdulthood/cobalt-comics/actions/workflows/cmake.yml)
 
-# Project Template
+# JSON Comics Database Query using Cobalt Coroutines

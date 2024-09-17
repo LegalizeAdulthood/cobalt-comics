@@ -8,11 +8,11 @@ namespace comics
 {
 namespace cobalt
 {
-boost::cobalt::generator<SequenceMatch> matches(DatabasePtr database, CreditField creditField, std::string_view name)
+boost::cobalt::generator<SearchResult> matches(DatabasePtr database, CreditField creditField, std::string_view name)
 {
     if (!database)
     {
-        co_return SequenceMatch{};
+        co_return SearchResult{};
     }
 
     std::map<int, simdjson::dom::object> issues;
@@ -49,6 +49,7 @@ boost::cobalt::generator<SequenceMatch> matches(DatabasePtr database, CreditFiel
             }
         }
     }
+    co_return SearchResult{};
 }
 
 } // namespace cobalt

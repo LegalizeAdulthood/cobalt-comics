@@ -7,10 +7,12 @@
   },
   "configurePresets": [
     {
-      "name": "sibling-build-preset",
+      "name": "build-type-debug",
       "hidden": true,
-      "description": "Use a sibling directory for the build based on the preset name",
-      "binaryDir": "${sourceDir}/../build-${sourceDirName}-${presetName}"
+      "description": "Set the build type to Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
     },
     {
       "name": "project-name",
@@ -21,16 +23,26 @@
       }
     },
     {
+      "name": "sibling-build-preset",
+      "hidden": true,
+      "description": "Use a sibling directory for the build based on the preset name",
+      "binaryDir": "${sourceDir}/../build-${sourceDirName}-${presetName}"
+    },
+    {
       "name": "vcpkg",
       "hidden": true,
       "description": "Configure the toolchain for vcpkg",
       "toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
     },
-
     {
       "name": "default",
       "displayName": "Configure with default settings",
       "inherits": [ "sibling-build-preset", "vcpkg", "project-name" ]
+    },
+    {
+      "name": "ci",
+      "displayName": "Configure with CI settings",
+      "inherits": [ "sibling-build-preset", "vcpkg", "project-name", "build-type-debug" ]
     }
   ],
   "buildPresets": [
@@ -38,6 +50,11 @@
       "name": "default",
       "displayName": "Build with default settings",
       "configurePreset": "default"
+    },
+    {
+      "name": "ci",
+      "displayName": "Build with CI settings",
+      "configurePreset": "ci"
     }
   ],
   "testPresets": [
@@ -45,6 +62,14 @@
       "name": "default",
       "displayName": "Test with default settings",
       "configurePreset": "default",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "ci",
+      "displayName": "Test with CI settings",
+      "configurePreset": "ci",
       "output": {
         "outputOnFailure": true
       }
@@ -66,6 +91,24 @@
         {
           "type": "test",
           "name": "default"
+        }
+      ]
+    },
+    {
+      "name": "ci",
+      "displayName": "CI Workflow with default settings: configure, build and test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ci"
+        },
+        {
+          "type": "build",
+          "name": "ci"
+        },
+        {
+          "type": "test",
+          "name": "ci"
         }
       ]
     }

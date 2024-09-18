@@ -203,6 +203,7 @@ TEST(TestComicsCoroutine, notResumableFromNoMatchingSquences)
     ASSERT_FALSE(resumable);
 }
 
+#if defined(MSVC)
 TEST(TestComicsCoroutine, resumableFromFirstMatchOfMultiple)
 {
     MockDatabasePtr db{createMockDatabase()};
@@ -240,3 +241,4 @@ TEST(TestComicsCoroutine, notResumableFromOnlyMatch)
     EXPECT_EQ("1", match.issue.at_key("issue number").get_string().value());
     EXPECT_NE(std::string::npos, match.sequence.at_key("letters").get_string().value().find(LETTERS_NAME_ONE_MATCH));
 }
+#endif

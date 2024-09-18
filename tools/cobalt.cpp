@@ -125,7 +125,7 @@ boost::cobalt::main co_main(int argc, char *argv[])
             {
                 str << '\n';
             }
-            if (std::optional<comics::SequenceMatch> result = co_await coro; result.has_value())
+            if (comics::cobalt::SearchResult result = co_await coro; result.has_value())
             {
                 printMatch(str, result.value());
                 first = false;

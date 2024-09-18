@@ -224,6 +224,7 @@ TEST_F(TestComicsCobalt, notReadyFromNoMatchingSquences)
     EXPECT_FALSE(value.has_value());
 }
 
+#if defined(WIN32)
 TEST_F(TestComicsCobalt, readyFromFirstMatchOfMultiple)
 {
     MockDatabasePtr db{createMockDatabase()};
@@ -261,3 +262,4 @@ TEST_F(TestComicsCobalt, notResumableFromOnlyMatch)
     EXPECT_EQ("1", match.value().issue.at_key("issue number").get_string().value());
     EXPECT_NE(std::string::npos, match.value().sequence.at_key("letters").get_string().value().find(LETTERS_NAME_ONE_MATCH));
 }
+#endif

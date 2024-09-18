@@ -1,5 +1,7 @@
 #include <comics/coro.h>
 
+#include "parsed_json.h"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -157,18 +159,6 @@ public:
     MOCK_METHOD(simdjson::simdjson_result<simdjson::dom::element>, getIssues, (), (const, override));
     MOCK_METHOD(simdjson::simdjson_result<simdjson::dom::element>, getSequences, (), (const, override));
 };
-
-struct ParsedJson
-{
-    explicit ParsedJson(std::string_view json);
-    simdjson::dom::parser m_parser;
-    simdjson::simdjson_result<simdjson::dom::element> m_document;
-};
-
-ParsedJson::ParsedJson(std::string_view json) :
-    m_document(m_parser.parse(json.data(), json.size()))
-{
-}
 
 using MockDatabasePtr = std::shared_ptr<MockDatabase>;
 

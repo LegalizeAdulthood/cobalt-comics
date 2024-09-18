@@ -203,7 +203,7 @@ TEST(TestComicsCoroutine, notResumableFromNoMatchingSquences)
     ASSERT_FALSE(resumable);
 }
 
-#if defined(MSVC)
+#if defined(WIN32)
 TEST(TestComicsCoroutine, resumableFromFirstMatchOfMultiple)
 {
     MockDatabasePtr db{createMockDatabase()};

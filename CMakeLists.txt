@@ -9,6 +9,7 @@ project("${COBALT_COMICS_PROJECT_NAME}" CXX)
 
 include(CTest)
 
+add_subdirectory(cobalt-examples)
 add_subdirectory(comics)
 add_subdirectory(tools)
 

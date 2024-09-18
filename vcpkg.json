@@ -6,5 +6,21 @@
     "boost-cobalt",
     "gtest",
     "simdjson"
-  ]
+  ],
+  "default-features": [ "cobalt-examples" ],
+  "features": {
+    "cobalt-examples": {
+      "description": "Dependencies needed only by the boost.cobalt examples",
+      "dependencies": [
+        "boost-beast",
+        "boost-callable-traits",
+        "boost-json",
+        "boost-lockfree",
+        "boost-outcome",
+        "boost-signals2",
+        "boost-url",
+        "openssl"
+      ]
+    }
+  }
 }

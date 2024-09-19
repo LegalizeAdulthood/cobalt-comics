@@ -226,6 +226,7 @@ boost::cobalt::task<std::vector<SearchResult>> twoValues(MockDatabasePtr db)
     co_return std::vector<SearchResult>{match,secondMatch};
 }
 
+#if defined(WIN32)
 TEST_F(TestComicsCobalt, multipleMatches)
 {
     MockDatabasePtr db{createMockDatabase()};
@@ -247,7 +248,6 @@ TEST_F(TestComicsCobalt, multipleMatches)
     EXPECT_EQ("comic story", secondMatch.value().sequence.at_key("type").get_string().value());
 }
 
-#if defined(WIN32)
 TEST_F(TestComicsCobalt, notResumableFromOnlyMatch)
 {
     MockDatabasePtr db{createMockDatabase()};

@@ -2,6 +2,9 @@
 
 #include "parsed_json.h"
 
+#include <boost/cobalt/run.hpp>
+#include <boost/cobalt/task.hpp>
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -215,22 +218,34 @@ TEST_F(TestComicsCobalt, notReadyFromNoMatchingSquences)
 }
 
 #if defined(WIN32)
-TEST_F(TestComicsCobalt, readyFromFirstMatchOfMultiple)
+boost::cobalt::task<std::vector<SearchResult>> twoValues(MockDatabasePtr db)
+{
+    boost::cobalt::generator coro{matches(db, comics::CreditField::SCRIPT, SCRIPT_NAME)};
+
+    const SearchResult match{co_await coro};
+    const SearchResult secondMatch{co_await coro};
+    co_return std::vector<SearchResult>{match,secondMatch};
+}
+
+TEST_F(TestComicsCobalt, multipleMatches)
 {
     MockDatabasePtr db{createMockDatabase()};
     ParsedJson issues{ISSUES};
     ParsedJson sequences{SEQUENCES};
     EXPECT_CALL(*db, getSequences()).WillOnce(Return(sequences.m_document));
     EXPECT_CALL(*db, getIssues()).WillOnce(Return(issues.m_document));
-    boost::cobalt::generator coro{matches(db, comics::CreditField::SCRIPT, SCRIPT_NAME)};
 
-    const bool firstReady{coro && coro.ready()};
-    const SearchResult match{coro.get()};
+    const std::vector matches{run(twoValues(db))};
 
-    EXPECT_TRUE(firstReady);
+    const SearchResult &match{matches[0]};
     ASSERT_TRUE(match.has_value());
     EXPECT_EQ("1", match.value().issue.at_key("issue number").get_string().value());
     EXPECT_NE(std::string::npos, match.value().sequence.at_key("script").get_string().value().find(SCRIPT_NAME));
+    EXPECT_EQ("cover", match.value().sequence.at_key("type").get_string().value());
+    const SearchResult &secondMatch{matches[1]};
+    EXPECT_EQ("1", secondMatch.value().issue.at_key("issue number").get_string().value());
+    EXPECT_NE(std::string::npos, secondMatch.value().sequence.at_key("script").get_string().value().find(SCRIPT_NAME));
+    EXPECT_EQ("comic story", secondMatch.value().sequence.at_key("type").get_string().value());
 }
 
 TEST_F(TestComicsCobalt, notResumableFromOnlyMatch)

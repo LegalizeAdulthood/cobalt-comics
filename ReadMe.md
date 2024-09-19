@@ -2,7 +2,7 @@
 
 # JSON Comics Database Query Using Boost.Cobalt Coroutines
 
-Sample code for the video Using Coroutines with Boost.Cobalt.
+Sample code for the video [Using Coroutines with Boost.Cobalt](https://www.youtube.com/watch?v=yElSdUqEvME).
 
 # Obtaining the Sample Data
 

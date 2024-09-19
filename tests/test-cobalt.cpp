@@ -217,7 +217,6 @@ TEST_F(TestComicsCobalt, notReadyFromNoMatchingSquences)
     EXPECT_FALSE(value.has_value());
 }
 
-#if defined(WIN32)
 boost::cobalt::task<std::vector<SearchResult>> twoValues(MockDatabasePtr db)
 {
     boost::cobalt::generator coro{matches(db, comics::CreditField::SCRIPT, SCRIPT_NAME)};
@@ -248,6 +247,7 @@ TEST_F(TestComicsCobalt, multipleMatches)
     EXPECT_EQ("comic story", secondMatch.value().sequence.at_key("type").get_string().value());
 }
 
+#if defined(WIN32)
 TEST_F(TestComicsCobalt, notResumableFromOnlyMatch)
 {
     MockDatabasePtr db{createMockDatabase()};
